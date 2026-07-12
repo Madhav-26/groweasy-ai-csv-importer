@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model ImportRecord {
+  id          String   @id @default(uuid())
+  fileName    String
+  totalRows   Int
+  imported    Int
+  skipped     Int
+  createdAt   DateTime @default(now())
+  leads       Lead[]
+}
+
+model Lead {
+  id                          String       @id @default(uuid())
+  importId                    String
+  importRecord                ImportRecord @relation(fields: [importId], references: [id])
+  createdAt                   String?      // AI extracted date
+  dbCreatedAt                 DateTime     @default(now())
+  name                        String?
+  email                       String?
+  countryCode                 String?
+  phone                       String?
+  company                     String?
+  city                        String?
+  state                       String?
+  country                     String?
+  leadOwner                   String?
+  crmStatus                   String?      // Allowed values: GOOD_LEAD_FOLLOW_UP, etc.
+  crmNote                     String?
+  dataSource                  String?      // Allowed values: leads_on_demand, etc.
+  possessionTime              String?
+  description                 String?
+}
